@@ -3,17 +3,35 @@ import './App.css';
 
 import Jobs from './Jobs'
 
-const mockJobs = [
-  {title: 'SWE 1', company: 'Google'},
-  {title: 'SWE 2', company: 'FaceBook'},
-  {title: 'SWE 2', company: 'Apple'}
+const JOB_API_URL = 'http://localhost:3001/jobs';
 
-]
+// const mockJobs = [
+//   {title: 'SWE 1', company: 'Google'},
+//   {title: 'SWE 2', company: 'FaceBook'},
+//   {title: 'SWE 2', company: 'Apple'}
+
+// ]
+
+async function fetchJobs(updateCb){
+  const res = await fetch(JOB_API_URL);
+  const json = await res.json();
+
+  updateCb(json);
+
+  console.log({json});
+}
 
 function App() {
+
+  const [jobList, updateJobs] = React.useState([]);
+
+  React.useEffect(() => {
+    fetchJobs(updateJobs);
+  }, [])
+
   return (
     <div className="App">
-      <Jobs jobs={mockJobs}/>
+      <Jobs jobs={jobList}/>
     </div>
   );
 }
